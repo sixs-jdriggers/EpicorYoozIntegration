@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpicorToYooz", "EpicorToYooz\EpicorToYooz.csproj", "{F9FC6C69-6105-449C-9ABD-3D75753E4979}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoozToEpicor", "YoozToEpicor\YoozToEpicor.csproj", "{9BA3367E-D6CC-4E8C-9B3C-98D7C20E3590}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F9FC6C69-6105-449C-9ABD-3D75753E4979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9FC6C69-6105-449C-9ABD-3D75753E4979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9FC6C69-6105-449C-9ABD-3D75753E4979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BA3367E-D6CC-4E8C-9B3C-98D7C20E3590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BA3367E-D6CC-4E8C-9B3C-98D7C20E3590}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BA3367E-D6CC-4E8C-9B3C-98D7C20E3590}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BA3367E-D6CC-4E8C-9B3C-98D7C20E3590}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
