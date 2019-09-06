@@ -26,9 +26,9 @@ namespace EpicorToYooz.Exports {
                 Logger.Debug("Converting BAQ results to classes for export...");
                 var accounts = data.Rows.Cast<DataRow>()
                                    .Select(row => new Account {
-                                       Company           = row[BAQColumns.GLAccount_Company.ToString()].ToString(),
-                                       GL_Account_Number = row[BAQColumns.GLAccount_GLAccount.ToString()].ToString(),
-                                       GL_Account_Label  = row[BAQColumns.GLAccount_AccountDesc.ToString()].ToString(),
+                                       AccountNumber = row[BAQColumns.Calculated_Account.ToString()].ToString(),
+                                       Description =
+                                           row[BAQColumns.GLAccount_AccountDesc.ToString()].ToString(),
                                        Classification =
                                            row[BAQColumns.Calculated_Classification.ToString()].ToString(),
                                        Action = row[BAQColumns.Calculated_Action.ToString()].ToString()
@@ -38,7 +38,17 @@ namespace EpicorToYooz.Exports {
                 Logger.Info("Writing Chart Of Accounts CSV file...");
                 using (var writer = new StreamWriter($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_ChartOfAccounts}"))
                 using (var csv = new CsvWriter(writer)) {
+                    // Tab delimited field, no column headers
+                    csv.Configuration.HasHeaderRecord = false;
+                    csv.Configuration.Delimiter       = "\t";
+                    csv.Configuration.ShouldQuote     = (field, context) => field.Contains("\t");
                     csv.Configuration.RegisterClassMap<AccountMap>();
+                    // Write Special Yooz header data
+                    csv.WriteField(Settings.Default.Export_ChartOfAccounts_Version, false);
+                    csv.NextRecord();
+                    csv.WriteField(Settings.Default.Export_ChartOfAccounts_Header, false);
+                    csv.NextRecord();
+                    // Export actual records.
                     csv.WriteRecords(accounts);
                 }
 
@@ -51,29 +61,26 @@ namespace EpicorToYooz.Exports {
         }
 
         private class Account {
-            public string Company           { get; set; }
-            public string GL_Account_Number { get; set; }
-            public string GL_Account_Label  { get; set; }
-            public string Classification    { get; set; }
-            public string Action            { get; set; }
+            public string AccountNumber  { get; set; }
+            public string Description    { get; set; }
+            public string Classification { get; set; }
+            public string Action         { get; set; }
         }
 
         /// <summary>
-        /// This determines the column names and order.
+        ///     This determines the column names and order.
         /// </summary>
         private class AccountMap : ClassMap<Account> {
             public AccountMap() {
-                Map(m => m.Company).Index(0).Name("Company");
-                Map(m => m.GL_Account_Number).Index(1).Name("GL Account Number");
-                Map(m => m.GL_Account_Label).Index(2).Name("GL Account Label");
-                Map(m => m.Classification).Index(3).Name("Classification");
-                Map(m => m.Action).Index(4).Name("Action");
+                Map(m => m.AccountNumber).Index(0).Name("GL Account Number");
+                Map(m => m.Description).Index(1).Name("GL Account Label");
+                Map(m => m.Classification).Index(2).Name("Classification");
+                Map(m => m.Action).Index(3).Name("Action");
             }
         }
 
         private enum BAQColumns {
-            GLAccount_Company,
-            GLAccount_GLAccount,
+            Calculated_Account,
             GLAccount_AccountDesc,
             Calculated_Classification,
             Calculated_Action

@@ -24,12 +24,16 @@ namespace EpicorToYooz.Exports {
                 var data = EpicorRest.GetBAQResults(Settings.Default.BAQ_POs, null);
 
                 Logger.Debug("Converting BAQ results to classes for export...");
-                var orders = data.Rows.Cast<DataRow>().Select(row => new Account {Company = row[BAQColumns.GLAccount_Company.ToString()].ToString()}).ToList();
+                var orders = data.Rows.Cast<DataRow>().Select(row => new PO {Company = "Company"}).ToList();
 
                 Logger.Info("Writing Purchase Order CSV file...");
                 using (var writer = new StreamWriter($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_POs}"))
                 using (var csv = new CsvWriter(writer)) {
+                    csv.Configuration.HasHeaderRecord = false;
+                    csv.Configuration.Delimiter       = "\t";
                     csv.Configuration.RegisterClassMap<POMap>();
+                    csv.WriteComment(Settings.Default.Export_PO_Version);
+                    csv.WriteComment(Settings.Default.Export_PO_Header);
                     csv.WriteRecords(orders);
                 }
 

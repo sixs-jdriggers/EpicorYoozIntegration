@@ -23,7 +23,7 @@ namespace EpicorToYooz {
 
                 Logger.Info("Data exported.");
                 Logger.Info("Beginning sFTP upload.");
-                UploadFiles();
+                //UploadFiles();
 
                 Logger.Info("Finished!");
             } catch (Exception ex) {
@@ -34,6 +34,8 @@ namespace EpicorToYooz {
         }
 
         private static void UploadFiles() {
+
+
             // File name and destination sFTP path
             var files = new Dictionary<string, string> {
                 {Settings.Default.FileName_ChartOfAccounts, Settings.Default.sFTP_Path_ChartOfAccount},

@@ -184,5 +184,59 @@ namespace EpicorToYooz.Properties {
                 return ((string)(this["FileName_POs"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("v20120430")]
+        public string Export_ChartOfAccounts_Version {
+            get {
+                return ((string)(this["Export_ChartOfAccounts_Version"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ACCOUNTANT_PLAN_TAB\t\t\t")]
+        public string Export_ChartOfAccounts_Header {
+            get {
+                return ((string)(this["Export_ChartOfAccounts_Header"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Export_PO_Version {
+            get {
+                return ((string)(this["Export_PO_Version"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Export_PO_Header {
+            get {
+                return ((string)(this["Export_PO_Header"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("v20120430")]
+        public string Export_Vendor_Version {
+            get {
+                return ((string)(this["Export_Vendor_Version"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SUPPLIER_TAB\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")]
+        public string Export_Vendor_Header {
+            get {
+                return ((string)(this["Export_Vendor_Header"]));
+            }
+        }
     }
 }
