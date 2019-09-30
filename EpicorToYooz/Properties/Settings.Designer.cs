@@ -25,7 +25,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("e101.sixspartners.us")]
+        [global::System.Configuration.DefaultSettingValueAttribute("EPDev")]
         public string Epicor_Server {
             get {
                 return ((string)(this["Epicor_Server"]));
@@ -34,7 +34,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Demo_102400")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Epicor10")]
         public string Epicor_Instance {
             get {
                 return ((string)(this["Epicor_Instance"]));
@@ -43,7 +43,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("manager")]
+        [global::System.Configuration.DefaultSettingValueAttribute("trigem")]
         public string Epicor_User {
             get {
                 return ((string)(this["Epicor_User"]));
@@ -52,7 +52,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("manager")]
+        [global::System.Configuration.DefaultSettingValueAttribute("sixspartners")]
         public string Epicor_Pass {
             get {
                 return ((string)(this["Epicor_Pass"]));
@@ -88,7 +88,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\Scratch\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\scratch\\")]
         public string TempDirectory {
             get {
                 return ((string)(this["TempDirectory"]));
@@ -236,6 +236,26 @@ namespace EpicorToYooz.Properties {
         public string Export_Vendor_Header {
             get {
                 return ((string)(this["Export_Vendor_Header"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ESC")]
+        public string Epicor_Company {
+            get {
+                return ((string)(this["Epicor_Company"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime LastExecution {
+            get {
+                return ((global::System.DateTime)(this["LastExecution"]));
+            }
+            set {
+                this["LastExecution"] = value;
             }
         }
     }

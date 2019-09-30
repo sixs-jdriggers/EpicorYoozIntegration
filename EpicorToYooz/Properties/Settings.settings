@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="Epicor_Server" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">e101.sixspartners.us</Value>
+      <Value Profile="(Default)">EPDev</Value>
     </Setting>
     <Setting Name="Epicor_Instance" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Demo_102400</Value>
+      <Value Profile="(Default)">Epicor10</Value>
     </Setting>
     <Setting Name="Epicor_User" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">manager</Value>
+      <Value Profile="(Default)">trigem</Value>
     </Setting>
     <Setting Name="Epicor_Pass" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">manager</Value>
+      <Value Profile="(Default)">sixspartners</Value>
     </Setting>
     <Setting Name="BAQ_ChartOfAccounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">YOOZ_ChartOfAccounts</Value>
@@ -24,7 +24,7 @@
       <Value Profile="(Default)">YOOZ_POs</Value>
     </Setting>
     <Setting Name="TempDirectory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\Scratch\</Value>
+      <Value Profile="(Default)">c:\scratch\</Value>
     </Setting>
     <Setting Name="sFTP_URL" Type="System.String" Scope="Application">
       <Value Profile="(Default)">sftp2.justyoozit.com</Value>
@@ -73,6 +73,12 @@
     </Setting>
     <Setting Name="Export_Vendor_Header" Type="System.String" Scope="Application">
       <Value Profile="(Default)">SUPPLIER_TAB																																						</Value>
+    </Setting>
+    <Setting Name="Epicor_Company" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ESC</Value>
+    </Setting>
+    <Setting Name="LastExecution" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

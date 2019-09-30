@@ -17,6 +17,10 @@ namespace EpicorToYooz {
 
                 Logger.Info("Starting Epicor=>Yooz Exports.");
 
+                // Update the last execution time.
+                // This keeps us from re-sending the same records repeatedly.
+                var executionTime = DateTime.Now;
+
                 ChartOfAccounts.Export();
                 Vendors.Export();
                 POs.Export();
@@ -24,6 +28,10 @@ namespace EpicorToYooz {
                 Logger.Info("Data exported.");
                 Logger.Info("Beginning sFTP upload.");
                 //UploadFiles();
+
+                // 
+                Settings.Default.LastExecution = executionTime;
+                Settings.Default.Save();
 
                 Logger.Info("Finished!");
             } catch (Exception ex) {
@@ -34,8 +42,6 @@ namespace EpicorToYooz {
         }
 
         private static void UploadFiles() {
-
-
             // File name and destination sFTP path
             var files = new Dictionary<string, string> {
                 {Settings.Default.FileName_ChartOfAccounts, Settings.Default.sFTP_Path_ChartOfAccount},

@@ -6,6 +6,8 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using EpicorRestAPI;
 using EpicorToYooz.Properties;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 
 namespace EpicorToYooz.Exports {
@@ -15,13 +17,17 @@ namespace EpicorToYooz.Exports {
         public static void Export() {
             try {
                 Logger.Debug("Setting up Epicor REST library...");
-                EpicorRest.AppPoolHost     = Settings.Default.Epicor_Server;
-                EpicorRest.AppPoolInstance = Settings.Default.Epicor_Instance;
-                EpicorRest.UserName        = Settings.Default.Epicor_User;
-                EpicorRest.Password        = Settings.Default.Epicor_Pass;
+                EpicorRest.AppPoolHost      = Settings.Default.Epicor_Server;
+                EpicorRest.AppPoolInstance  = Settings.Default.Epicor_Instance;
+                EpicorRest.UserName         = Settings.Default.Epicor_User;
+                EpicorRest.Password         = Settings.Default.Epicor_Pass;
+                EpicorRest.CallSettings     = new CallSettings(Settings.Default.Epicor_Company, string.Empty, string.Empty, string.Empty);
+                EpicorRest.IgnoreCertErrors = true;
 
                 Logger.Debug($"Calling BAQ {Settings.Default.BAQ_ChartOfAccounts}...");
-                var data = EpicorRest.GetBAQResults(Settings.Default.BAQ_ChartOfAccounts, null);
+                var jsonData = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_ChartOfAccounts, null);
+                
+                var data = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
 
                 Logger.Debug("Converting BAQ results to classes for export...");
                 var accounts = data.Rows.Cast<DataRow>()
@@ -56,6 +62,7 @@ namespace EpicorToYooz.Exports {
             } catch (Exception ex) {
                 Logger.Error("Failed to export Chart of Accounts!");
                 Logger.Error($"Error: {ex.Message}");
+                Logger.Error($"Error: {ex.StackTrace}");
                 throw;
             }
         }
