@@ -20,43 +20,54 @@ namespace EpicorToYooz.Exports {
                 EpicorRest.AppPoolInstance  = Settings.Default.Epicor_Instance;
                 EpicorRest.UserName         = Settings.Default.Epicor_User;
                 EpicorRest.Password         = Settings.Default.Epicor_Pass;
-                EpicorRest.CallSettings = new CallSettings(Settings.Default.Epicor_Company, string.Empty, string.Empty, string.Empty);
+                EpicorRest.CallSettings     = new CallSettings(Settings.Default.Epicor_Company, string.Empty, string.Empty, string.Empty);
                 EpicorRest.IgnoreCertErrors = true;
 
                 Logger.Debug($"Calling BAQ {Settings.Default.BAQ_POs}...");
                 var jsonData = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_POs, null);
                 var data     = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
 
-                Logger.Debug("Converting BAQ results to classes for export...");
                 var orders = data.Rows.Cast<DataRow>()
                                  .Select(row => new PO {
-                                     Action          = row[BAQColumns.Calculated_Action.ToString()].ToString(),
-                                     VendorCode      = row[BAQColumns.Vendor_VendorID.ToString()].ToString(),
-                                     VendorName      = row[BAQColumns.Vendor_Name.ToString()].ToString(),
-                                     OrderNumber     = row[BAQColumns.POHeader_PONum.ToString()].ToString(),
-                                     OrderDate       = row[BAQColumns.POHeader_OrderDate.ToString()].ToString(),
-                                     Amount          = row[BAQColumns.POHeader_TotalOrder.ToString()].ToString(),
-                                     AmountExlTax    = row[BAQColumns.Calculated_AmountExlTax.ToString()].ToString(),
-                                     Currency        = row[BAQColumns.POHeader_CurrencyCode.ToString()].ToString(),
-                                     OrderCreator    = row[BAQColumns.UserFile_Name.ToString()].ToString(),
-                                     OrderApprover   = row[BAQColumns.PurAgent_BuyerID.ToString()].ToString(),
-                                     Status          = row[BAQColumns.Calculated_Status.ToString()].ToString(),
-                                     ItemNumber      = row[BAQColumns.PODetail_PartNum.ToString()].ToString(),
-                                     ItemCode        = row[BAQColumns.Calculated_ItemCode.ToString()].ToString(),
-                                     ItemDescription = row[BAQColumns.PODetail_LineDesc.ToString()].ToString(),
-                                     ItemUnitPrice   = row[BAQColumns.PODetail_UnitCost.ToString()].ToString(),
-                                     QuantityOrdered = row[BAQColumns.PODetail_OrderQty.ToString()].ToString()
+                                     Action               = row[BAQColumns.Calculated_Action.ToString()].ToString(),
+                                     VendorCode           = row[BAQColumns.Vendor_VendorID.ToString()].ToString(),
+                                     VendorName           = row[BAQColumns.Vendor_Name.ToString()].ToString(),
+                                     OrderNumber          = row[BAQColumns.POHeader_PONum.ToString()].ToString(),
+                                     OrderDate            = row[BAQColumns.Calculated_OrderDate.ToString()].ToString(),
+                                     Amount               = row[BAQColumns.POHeader_TotalOrder.ToString()].ToString(),
+                                     AmountExlTax         = row[BAQColumns.Calculated_AmountExlTax.ToString()].ToString(),
+                                     Currency             = row[BAQColumns.POHeader_CurrencyCode.ToString()].ToString(),
+                                     OrderCreator         = row[BAQColumns.UserFile_Name.ToString()].ToString(),
+                                     OrderApprover        = row[BAQColumns.PurAgent_BuyerID.ToString()].ToString(),
+                                     Status               = row[BAQColumns.Calculated_Status.ToString()].ToString(),
+                                     ItemNumber           = row[BAQColumns.PODetail_PartNum.ToString()].ToString(),
+                                     ItemCode             = row[BAQColumns.Calculated_ItemCode.ToString()].ToString(),
+                                     ItemDescription      = row[BAQColumns.PODetail_LineDesc.ToString()].ToString(),
+                                     ItemUnitPrice        = row[BAQColumns.PODetail_UnitCost.ToString()].ToString(),
+                                     QuantityOrdered      = row[BAQColumns.PODetail_OrderQty.ToString()].ToString(),
+                                     QuantityRecieved     = row[BAQColumns.Calculated_QtyReceived.ToString()].ToString(),
+                                     QuantityCharged      = row[BAQColumns.Calculated_QtyCharged.ToString()].ToString(),
+                                     AmountExlTax_Dtl     = row[BAQColumns.Calculated_AmountExlTax_Dtl.ToString()].ToString(),
+                                     DiscountedAmount     = row[BAQColumns.Calculated_DiscountedAmount_Dtl.ToString()].ToString(),
+                                     TaxProfileCode       = row[BAQColumns.Calculated_TaxProfileCode.ToString()].ToString(),
+                                     TaxAmount            = row[BAQColumns.Calculated_TaxAmount.ToString()].ToString(),
+                                     GLAccount            = row[BAQColumns.Calculated_GLAccount.ToString()].ToString(),
+                                     CostCenterDims       = row[BAQColumns.Calculated_CostCenterDims.ToString()].ToString(),
+                                     CostCenters          = row[BAQColumns.Calculated_CostCenters.ToString()].ToString(),
+                                     Subsidiary           = row[BAQColumns.Calculated_Subsidiary.ToString()].ToString(),
+                                     VendorItemCode       = row[BAQColumns.Calculated_VendorItemCode.ToString()].ToString(),
+                                     HeaderCustomData     = row[BAQColumns.Calculated_HeaderCustomData.ToString()].ToString(),
+                                     AccountingCustomData = row[BAQColumns.Calculated_AccountingCustomData.ToString()].ToString(),
                                  })
                                  .ToList();
 
+                Logger.Debug("Converting BAQ results to classes for export...");
                 Logger.Info("Writing Purchase Order CSV file...");
                 using (var writer = new StreamWriter($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_POs}"))
                 using (var csv = new CsvWriter(writer)) {
                     csv.Configuration.HasHeaderRecord = false;
                     csv.Configuration.Delimiter       = "\t";
                     csv.Configuration.RegisterClassMap<POMap>();
-                    csv.WriteComment(Settings.Default.Export_PO_Version);
-                    csv.WriteComment(Settings.Default.Export_PO_Header);
                     csv.WriteRecords(orders);
                 }
 
@@ -69,22 +80,35 @@ namespace EpicorToYooz.Exports {
         }
 
         internal class PO {
-            public string Action          { get; set; }
-            public string VendorCode      { get; set; }
-            public string VendorName      { get; set; }
-            public string OrderNumber     { get; set; }
-            public string OrderDate       { get; set; }
-            public string Amount          { get; set; }
-            public string AmountExlTax    { get; set; }
-            public string Currency        { get; set; }
-            public string OrderCreator    { get; set; }
-            public string OrderApprover   { get; set; }
-            public string Status          { get; set; }
-            public string ItemNumber      { get; set; }
-            public string ItemCode        { get; set; }
-            public string ItemDescription { get; set; }
-            public string ItemUnitPrice   { get; set; }
-            public string QuantityOrdered { get; set; }
+            public string Action               { get; set; }
+            public string VendorCode           { get; set; }
+            public string VendorName           { get; set; }
+            public string OrderNumber          { get; set; }
+            public string OrderDate            { get; set; }
+            public string Amount               { get; set; }
+            public string AmountExlTax         { get; set; }
+            public string Currency             { get; set; }
+            public string OrderCreator         { get; set; }
+            public string OrderApprover        { get; set; }
+            public string Status               { get; set; }
+            public string ItemNumber           { get; set; }
+            public string ItemCode             { get; set; }
+            public string ItemDescription      { get; set; }
+            public string ItemUnitPrice        { get; set; }
+            public string QuantityOrdered      { get; set; }
+            public string QuantityRecieved     { get; set; }
+            public string QuantityCharged      { get; set; }
+            public string AmountExlTax_Dtl     { get; set; }
+            public string DiscountedAmount     { get; set; }
+            public string TaxProfileCode       { get; set; }
+            public string TaxAmount            { get; set; }
+            public string GLAccount            { get; set; }
+            public string CostCenterDims       { get; set; }
+            public string CostCenters          { get; set; }
+            public string Subsidiary           { get; set; }
+            public string VendorItemCode       { get; set; }
+            public string HeaderCustomData     { get; set; }
+            public string AccountingCustomData { get; set; }
         }
 
         /// <summary>
@@ -108,6 +132,19 @@ namespace EpicorToYooz.Exports {
                 Map(m => m.ItemDescription).Index(13).Name("ItemDescription");
                 Map(m => m.ItemUnitPrice).Index(14).Name("ItemUnitPrice");
                 Map(m => m.QuantityOrdered).Index(15).Name("QuantityOrdered");
+                Map(m => m.QuantityRecieved).Index(16).Name("QuantityReceived");
+                Map(m => m.QuantityCharged).Index(17).Name("QuantityCharged");
+                Map(m => m.AmountExlTax_Dtl).Index(18).Name("AmountExlTax_Dtl");
+                Map(m => m.DiscountedAmount).Index(19).Name("DiscountedAmount");
+                Map(m => m.TaxProfileCode).Index(20).Name("TaxProfileCode");
+                Map(m => m.TaxAmount).Index(20).Name("TaxAmount");
+                Map(m => m.GLAccount).Index(21).Name("GLAccount");
+                Map(m => m.CostCenterDims).Index(22).Name("CostCenterDims");
+                Map(m => m.CostCenters).Index(23).Name("CostCenters");
+                Map(m => m.Subsidiary).Index(24).Name("Subsidiary");
+                Map(m => m.VendorItemCode).Index(25).Name("VendorItemCode");
+                Map(m => m.HeaderCustomData).Index(26).Name("HeaderCustomData");
+                Map(m => m.AccountingCustomData).Index(27).Name("AccountingCustomData");
             }
         }
 
@@ -116,7 +153,7 @@ namespace EpicorToYooz.Exports {
             Vendor_VendorID,
             Vendor_Name,
             POHeader_PONum,
-            POHeader_OrderDate,
+            Calculated_OrderDate,
             POHeader_TotalOrder,
             Calculated_AmountExlTax,
             POHeader_CurrencyCode,
@@ -127,7 +164,20 @@ namespace EpicorToYooz.Exports {
             Calculated_ItemCode,
             PODetail_LineDesc,
             PODetail_UnitCost,
-            PODetail_OrderQty
+            PODetail_OrderQty,
+            Calculated_QtyReceived,
+            Calculated_QtyCharged,
+            Calculated_AmountExlTax_Dtl,
+            Calculated_DiscountedAmount_Dtl,
+            Calculated_TaxProfileCode,
+            Calculated_TaxAmount,
+            Calculated_GLAccount,
+            Calculated_CostCenterDims,
+            Calculated_CostCenters,
+            Calculated_Subsidiary,
+            Calculated_VendorItemCode,
+            Calculated_HeaderCustomData,
+            Calculated_AccountingCustomData
         }
     }
 }

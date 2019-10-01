@@ -24,7 +24,7 @@
       <Value Profile="(Default)">YOOZ_POs</Value>
     </Setting>
     <Setting Name="TempDirectory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\scratch\</Value>
+      <Value Profile="(Default)">c:\scratch\Uploads</Value>
     </Setting>
     <Setting Name="sFTP_URL" Type="System.String" Scope="Application">
       <Value Profile="(Default)">sftp2.justyoozit.com</Value>
@@ -79,6 +79,9 @@
     </Setting>
     <Setting Name="LastExecution" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SkipFTPUpload" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

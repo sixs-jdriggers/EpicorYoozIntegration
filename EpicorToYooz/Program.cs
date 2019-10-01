@@ -12,13 +12,13 @@ namespace EpicorToYooz {
 
         private static void Main(string[] args) {
             try {
-                Logger.Info("Clearing temp directory.");
+                Logger.Info($"Clearing temp directory: {Settings.Default.TempDirectory}");
                 ClearTempDirectory();
 
                 Logger.Info("Starting Epicor=>Yooz Exports.");
 
-                // Update the last execution time.
-                // This keeps us from re-sending the same records repeatedly.
+                // Take a snapshot of the current time so we can keep up with what we
+                // exported.
                 var executionTime = DateTime.Now;
 
                 ChartOfAccounts.Export();
@@ -26,10 +26,19 @@ namespace EpicorToYooz {
                 POs.Export();
 
                 Logger.Info("Data exported.");
-                Logger.Info("Beginning sFTP upload.");
-                //UploadFiles();
 
-                // 
+                // If we're configured to skip the upload, don't do it.
+                // Also, don't update last execution time since we didn't actually process anything.
+                if (Settings.Default.SkipFTPUpload) {
+                    Logger.Info("Skipping sFTP upload. ('SkipFTPUpload' config item = TRUE)");
+                    Logger.Info("Finished.");
+                    return;
+                }
+
+                Logger.Info("Beginning sFTP upload.");
+                UploadFiles();
+                
+                // Save the last execution time now that we know execution was successful.
                 Settings.Default.LastExecution = executionTime;
                 Settings.Default.Save();
 

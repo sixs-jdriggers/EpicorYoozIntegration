@@ -88,7 +88,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\scratch\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\scratch\\Uploads")]
         public string TempDirectory {
             get {
                 return ((string)(this["TempDirectory"]));
@@ -256,6 +256,15 @@ namespace EpicorToYooz.Properties {
             }
             set {
                 this["LastExecution"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SkipFTPUpload {
+            get {
+                return ((bool)(this["SkipFTPUpload"]));
             }
         }
     }
