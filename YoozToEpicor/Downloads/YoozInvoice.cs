@@ -38,8 +38,15 @@ namespace YoozToEpicor.Downloads {
         public string    Description   { get; set; }
         public string    CostCenter    { get; set; }
         public string    SubAccount    { get; set; }
+        public string    PONumber      { get; set; }
+        public string    ProductCode   { get; set; }
+        public string    ProductLabel  { get; set; }
+        public decimal?  InvoiceQty    { get; set; }
+        public decimal?  UnitPrice     { get; set; }
     }
 
+    // Map CSV headers to class properties.
+    // Be mindful, these are case-sensitive and Yooz is kinda sloppy about their casing.
     public sealed class InvoiceLineMap : ClassMap<InvoiceLine> {
         public InvoiceLineMap() {
             Map(m => m.Entity).Name("Entity");
@@ -53,6 +60,11 @@ namespace YoozToEpicor.Downloads {
             Map(m => m.Description).Name("Description");
             Map(m => m.CostCenter).Name("Cost Center");
             Map(m => m.SubAccount).Name("Sub Account");
+            Map(m => m.PONumber).Name("PO#");
+            Map(m => m.ProductCode).Name("Product code");
+            Map(m => m.ProductLabel).Name("Product label");
+            Map(m => m.InvoiceQty).Name("Invoiced quantity");
+            Map(m => m.UnitPrice).Name("Unit price");
         }
     }
 }

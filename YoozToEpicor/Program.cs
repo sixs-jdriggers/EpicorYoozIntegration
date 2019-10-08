@@ -11,9 +11,18 @@ namespace YoozToEpicor {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static void Main(string[] args) {
-            Logger.Info("Downloading Yooz files.");
             Logger.Info($"Temp Directory: {Settings.Default.TempDirectory}");
-            downloadFiles();
+
+            /*
+             * We have a config option to skip downloading new files. This
+             * makes it easier to test with arbitrary files if Yooz doesn't have good test data
+             * available on the sFTP site.
+             */
+            if (!Settings.Default.DevOption_SkipDownloadingNewFiles) {
+                Logger.Info("Downloading Yooz files.");
+                downloadFiles();
+            } else {
+                Logger.Info("Skipping download of Yooz files. (Configured option.)");}
 
             var filesToProcess = Directory.GetFiles(Settings.Default.TempDirectory);
             Logger.Info($"Processing {filesToProcess.Length} files.");

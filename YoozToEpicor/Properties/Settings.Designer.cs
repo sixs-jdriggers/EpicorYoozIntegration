@@ -133,10 +133,19 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DeleteTempFilesAfterProcessing {
             get {
                 return ((bool)(this["DeleteTempFilesAfterProcessing"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DevOption_SkipDownloadingNewFiles {
+            get {
+                return ((bool)(this["DevOption_SkipDownloadingNewFiles"]));
             }
         }
     }
