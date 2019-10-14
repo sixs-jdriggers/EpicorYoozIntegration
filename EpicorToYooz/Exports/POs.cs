@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -24,8 +25,10 @@ namespace EpicorToYooz.Exports {
                 EpicorRest.IgnoreCertErrors = true;
 
                 Logger.Debug($"Calling BAQ {Settings.Default.BAQ_POs}...");
-                var jsonData = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_POs, null);
-                var data     = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
+                var parameters = new Dictionary<string, string> {{"LastChange", Settings.Default.LastExecution.ToString()}};
+                var jsonData   = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_POs, parameters);
+
+                var data = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
 
                 var orders = data.Rows.Cast<DataRow>()
                                  .Select(row => new PO {
@@ -57,7 +60,7 @@ namespace EpicorToYooz.Exports {
                                      Subsidiary           = row[BAQColumns.Calculated_Subsidiary.ToString()].ToString(),
                                      VendorItemCode       = row[BAQColumns.Calculated_VendorItemCode.ToString()].ToString(),
                                      HeaderCustomData     = row[BAQColumns.Calculated_HeaderCustomData.ToString()].ToString(),
-                                     AccountingCustomData = row[BAQColumns.Calculated_AccountingCustomData.ToString()].ToString(),
+                                     AccountingCustomData = row[BAQColumns.Calculated_AccountingCustomData.ToString()].ToString()
                                  })
                                  .ToList();
 

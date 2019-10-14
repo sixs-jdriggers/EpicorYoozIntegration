@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -24,8 +25,9 @@ namespace EpicorToYooz.Exports {
                 EpicorRest.IgnoreCertErrors = true;
 
                 Logger.Debug($"Calling BAQ {Settings.Default.BAQ_Vendors}...");
-                var jsonData = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_Vendors, null);
-                var data     = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
+                var parameters = new Dictionary<string, string> {{"LastChange", Settings.Default.LastExecution.ToString()}};
+                var jsonData   = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_Vendors, parameters);
+                var data       = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
 
                 Logger.Debug("Converting BAQ results to classes for export...");
                 var vendors = data.Rows.Cast<DataRow>()

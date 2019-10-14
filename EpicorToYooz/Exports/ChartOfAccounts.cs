@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,6 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using EpicorRestAPI;
 using EpicorToYooz.Properties;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 
@@ -25,8 +25,9 @@ namespace EpicorToYooz.Exports {
                 EpicorRest.IgnoreCertErrors = true;
 
                 Logger.Debug($"Calling BAQ {Settings.Default.BAQ_ChartOfAccounts}...");
-                var jsonData = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_ChartOfAccounts, null);
-                
+                var parameters = new Dictionary<string, string> {{"LastChange", Settings.Default.LastExecution.ToString()}};
+                var jsonData   = EpicorRest.GetBAQResultJSON(Settings.Default.BAQ_ChartOfAccounts, parameters);
+
                 var data = JObject.Parse(jsonData)["value"].ToObject<DataTable>();
 
                 Logger.Debug("Converting BAQ results to classes for export...");

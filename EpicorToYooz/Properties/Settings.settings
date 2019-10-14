@@ -78,7 +78,7 @@
       <Value Profile="(Default)">ESC</Value>
     </Setting>
     <Setting Name="LastExecution" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">2019-10-13</Value>
     </Setting>
     <Setting Name="SkipFTPUpload" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>

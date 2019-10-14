@@ -250,6 +250,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2019-10-13")]
         public global::System.DateTime LastExecution {
             get {
                 return ((global::System.DateTime)(this["LastExecution"]));

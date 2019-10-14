@@ -31,13 +31,11 @@ namespace EpicorToYooz {
                 // Also, don't update last execution time since we didn't actually process anything.
                 if (Settings.Default.SkipFTPUpload) {
                     Logger.Info("Skipping sFTP upload. ('SkipFTPUpload' config item = TRUE)");
-                    Logger.Info("Finished.");
-                    return;
+                } else {
+                    Logger.Info("Beginning sFTP upload.");
+                    UploadFiles();
                 }
 
-                Logger.Info("Beginning sFTP upload.");
-                UploadFiles();
-                
                 // Save the last execution time now that we know execution was successful.
                 Settings.Default.LastExecution = executionTime;
                 Settings.Default.Save();
@@ -47,7 +45,6 @@ namespace EpicorToYooz {
                 Logger.Fatal("Execution ended.");
                 Logger.Fatal($"Error: {ex.Message}");
             }
-            Console.ReadKey();
         }
 
         private static void UploadFiles() {
