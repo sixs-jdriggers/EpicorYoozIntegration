@@ -35,10 +35,10 @@ namespace YoozToEpicor {
 
             // Archive/Delete processed files
             if (Settings.Default.DeleteTempFilesAfterProcessing)
-                archiveFiles();
+                deleteFiles();
         }
 
-        private static void archiveFiles() {
+        private static void deleteFiles() {
             Logger.Info($"Deleting processed files from: {Settings.Default.TempDirectory}");
             var files = Directory.GetFiles(Settings.Default.TempDirectory);
             foreach (var file in files) {

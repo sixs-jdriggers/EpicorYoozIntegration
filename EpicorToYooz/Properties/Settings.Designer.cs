@@ -151,7 +151,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/ORDER")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/PURCHASE_ORDER")]
         public string sFTP_Path_POs {
             get {
                 return ((string)(this["sFTP_Path_POs"]));

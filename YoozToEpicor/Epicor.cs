@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using EpicorRestAPI;
 using NLog;
 using YoozToEpicor.Downloads;
@@ -56,22 +57,71 @@ namespace YoozToEpicor {
             // So we just grab the first line to get the header values.
             var exampleLine = invoice.InvoiceLines.First();
 
-            // Get a new invoice dataset
-            var invoiceDS = getInvoiceHead(groupID, service);
+            // Create a new header if we haven't done so already.
+            if (!invoiceHeadExists(service,exampleLine, groupID)) {
+                // Get a new invoice dataset
+                var invoiceDS = getInvoiceHead(groupID, service);
 
-            // Populate our data and save the head.
-            // After this we're ready to add lines.
-            invoiceDS = populateInvoiceHead(invoiceDS, exampleLine, groupID, service);
+                // Populate our data and save the head.
+                // After this we're ready to add lines.
+                invoiceDS = populateInvoiceHead(invoiceDS, exampleLine, groupID, service);
+            } 
 
             // Add lines to invoice
-            ImportInvoiceLines(invoiceDS, invoice, groupID, service);
+            ImportInvoiceLines(invoice, service);
 
             Logger.Info($"Invoice '{exampleLine.InvoiceNum}' created.");
+        }
+        
+        private static void ImportInvoiceLines(YoozInvoice invoice, string service) {
+            Logger.Info("Adding lines to invoice.");
+            SetupREST();
+
+            foreach (var invoiceLine in invoice.InvoiceLines) {
+                Logger.Info($"Adding line for part: {invoiceLine.Description}");
+
+                // Create the invoice lines with default values
+                int.TryParse(invoiceLine.PONumber, out var poNum);
+                dynamic postData;
+                if (poNum!=0) {
+                    Logger.Info("Creating receipt line.");
+                    // Create receipt line
+                    postData = getReceiptLines(service, invoiceLine);
+                    selectAndInvoiceLines(service, postData, invoiceLine);
+
+                    // Lookup our invoice with the newly created lines
+                    postData = getInvoiceByID(service, invoiceLine);
+
+                    // Set the quantity
+                    postData = changeVendorQty(service, postData, invoiceLine);
+
+                    // Set the price
+                    if (invoiceLine.UnitPrice.HasValue)
+                        postData = changeUnitCost(service, postData, invoiceLine);
+
+                    // Save the final invoice
+                    update(postData.parameters.ds, service);
+                } else {
+                    Logger.Info("Creating misc line.");
+                    // Create Misc line
+                    postData = getInvoiceByID(service, invoiceLine);
+                    postData = createMiscLine(service, postData, invoiceLine);
+                    postData = changePartNum_Misc(service, postData, invoiceLine);
+                    postData = changeExtCost(service, invoiceLine, postData);
+
+                    // Save the final invoice
+                    update(postData.parameters.ds, service);
+                }
+
+                Logger.Info("Line added.");
+            }
+
+            Logger.Info("Finished adding lines.");
         }
 
         #region Header Creation
         private static dynamic getInvoiceHead(string groupID, string service) {
-            Logger.Trace("Getting new invoice dataset.");
+            Logger.Trace("Getting new invoice header.");
             var head = new {
                 ds       = new { },
                 cGroupID = groupID
@@ -83,8 +133,9 @@ namespace YoozToEpicor {
         private static dynamic populateInvoiceHead(dynamic invoiceDS, InvoiceLine exampleLine, string groupID, string service) {
             Logger.Trace("Poulating invoice header fields.");
 
-            // Set PO Num
-            invoiceDS = changeRefPONum(invoiceDS, exampleLine, service, out int poNum);
+            // Set PO Num or Vendor (For misc invoices)
+            int.TryParse(exampleLine.PONumber, out var poNum);
+            invoiceDS = poNum!=0 ? changeRefPONum(invoiceDS, exampleLine, service, poNum) : changeVendor(invoiceDS, exampleLine, service);
 
             // Set Invoice Date
             invoiceDS = changeInvoiceDateEx(invoiceDS, exampleLine, service);
@@ -107,9 +158,18 @@ namespace YoozToEpicor {
             return invoiceDS;
         }
 
-        private static dynamic changeRefPONum(dynamic invoiceDS, InvoiceLine exampleLine, string service, out int poNum) {
+        private static dynamic changeVendor(dynamic invoiceDS, InvoiceLine exampleLine, string service) {
+            // Set vendor
+            var postData = new {
+                invoiceDS.parameters.ds,
+                ProposedVendorID = exampleLine.VendorID
+            };
+
+            return EpicorRest.DynamicPost(service, "ChangeVendorID", postData);
+        }
+
+        private static dynamic changeRefPONum(dynamic invoiceDS, InvoiceLine exampleLine, string service, int poNum) {
             // Set PO Number
-            int.TryParse(exampleLine.PONumber, out poNum);
             invoiceDS.parameters.ds.APInvHed[0].REFPONum = poNum;
             var changePOData = new {
                 ProposedRefPONum = poNum,
@@ -146,37 +206,8 @@ namespace YoozToEpicor {
         }
         #endregion
 
-        #region Line Creation
-        private static void ImportInvoiceLines(dynamic invoiceDS, YoozInvoice invoice, string groupID, string service) {
-            Logger.Info("Adding lines to invoice.");
-            SetupREST();
-
-            foreach (var invoiceLine in invoice.InvoiceLines) {
-                Logger.Info($"Adding line for part: {invoiceLine.Description}");
-
-                // Create the invoice lines with default values
-                var postData = getReceiptLines(service, invoiceLine);
-                selectAndInvoiceLines(service, postData, invoiceLine);
-
-                // Lookup our invoice with the newly created lines
-                postData = getByID(service, invoiceLine);
-
-                // Set the quantity
-                postData = changeVendorQty(service, postData, invoiceLine);
-
-                // Set the price
-                if (invoiceLine.UnitPrice.HasValue)
-                    postData = changeUnitCost(service, postData, invoiceLine);
-                
-                // Save the final invoice
-                postData = update(postData.parameters.ds, service);
-
-                Logger.Info("Line added.");
-            }
-
-            Logger.Info("Finished adding lines.");
-        }
-
+        #region Receipt Line Creation
+        // Process PO/Receipt Lines
         private static dynamic getReceiptLines(string service, InvoiceLine invoiceLine) {
             // Get receipts
             dynamic postData = new {
@@ -191,7 +222,7 @@ namespace YoozToEpicor {
         }
 
         private static void selectAndInvoiceLines(string service, dynamic postData, InvoiceLine invoiceLine) {
-            // Select lines
+            // Select lines for invoicing
             var purPoint = "";
             var packSlip = "";
             foreach (var uninvoicedRcptLine in postData.parameters.ds.APUninvoicedRcptLines) {
@@ -205,6 +236,7 @@ namespace YoozToEpicor {
                 break; // Found our line!
             }
 
+            // Apply our selections
             postData = new {
                 postData.parameters.ds,
                 InVendorNum = getVendorNumByID(invoiceLine.VendorID),
@@ -218,28 +250,15 @@ namespace YoozToEpicor {
 
             postData = EpicorRest.DynamicPost(service, "SelectUninvoicedRcptLines", postData);
 
-            // Invoice the lines
+            // Add the selections to our invoice
             postData = new {
                 postData.parameters.ds,
                 opLOCMsg = ""
             };
 
-            // Invoice receipts
             EpicorRest.DynamicPost(service, "InvoiceSelectedLines", postData);
         }
-
-        private static dynamic getByID(string service, InvoiceLine invoiceLine) {
-            dynamic postData;
-            // Look up the invoice with our newly created lines
-            postData = new {
-                vendorNum  = getVendorNumByID(invoiceLine.VendorID),
-                invoiceNum = invoiceLine.InvoiceNum
-            };
-
-            postData = EpicorRest.DynamicPost(service, "GetByID", postData);
-            return postData;
-        }
-
+        
         private static dynamic changeVendorQty(string service, dynamic invoiceDS, InvoiceLine invoiceLine) {
             foreach (var invDtl in invoiceDS.ds.APInvDtl) {
                 if (!string.Equals(invDtl.PartNum.ToString(), invoiceLine.ProductCode, StringComparison.CurrentCultureIgnoreCase))
@@ -252,7 +271,7 @@ namespace YoozToEpicor {
             }
 
             var paramDS = new {
-                ds                = invoiceDS.ds,
+                invoiceDS.ds,
                 ProposedVendorQty = invoiceLine.InvoiceQty
             };
 
@@ -271,12 +290,57 @@ namespace YoozToEpicor {
             }
 
             var paramDS = new {
-                ds               = invoiceDS.ds,
+                invoiceDS.ds,
                 ProposedUnitCost = invoiceLine.UnitPrice
             };
 
             invoiceDS = EpicorRest.DynamicPost(service, "ChangeUnitCost", paramDS);
             return invoiceDS;
+        }
+        #endregion
+
+        #region Misc Line Creation
+        // Process Misc Lines
+        private static object createMiscLine(string service, dynamic postData, InvoiceLine invoiceLine) {
+            // Get new non-POLine
+            postData = new {
+                ds          = postData.ds,
+                iVendorNum  = getVendorNumByID(invoiceLine.VendorID),
+                cInvoiceNum = invoiceLine.InvoiceNum
+            };
+
+            postData = EpicorRest.DynamicPost(service, "GetNewAPInvDtlMiscellaneous", postData);
+
+            return postData;
+        }
+
+        private static dynamic changePartNum_Misc(string service, dynamic postData, InvoiceLine invoiceLine) {
+            // Populate line info
+            var ds    = postData.parameters.ds;
+            var lines = ds.APInvDtl.Count;
+            ds.APInvDtl[lines-1].PartNum     = !string.IsNullOrWhiteSpace(invoiceLine.ProductCode) ? invoiceLine.ProductCode : invoiceLine.Description;
+            ds.APInvDtl[lines-1].Description = invoiceLine.Description;
+
+            postData = new {
+                ProposedPartNum = !string.IsNullOrWhiteSpace(invoiceLine.ProductCode) ? invoiceLine.ProductCode : invoiceLine.Description,
+                ds
+            };
+
+            return EpicorRest.DynamicPost(service, "ChangePartNum", postData);
+        }
+
+        private static dynamic changeExtCost(string service, InvoiceLine invoiceLine, dynamic ds) {
+            ds = ds.parameters.ds;
+            var lines = ds.APInvDtl.Count;
+
+            ds.APInvDtl[lines-1].DocExtCost = invoiceLine.InvoiceAmount;
+
+            var postData = new {
+                ProposedExtCost = invoiceLine.InvoiceAmount,
+                ds
+            };
+
+            return EpicorRest.DynamicPost(service, "ChangeExtCost", postData);
         }
         #endregion
 
@@ -305,6 +369,33 @@ namespace YoozToEpicor {
                 throw new Exception($"Unable to locate vendor by ID '{vendorID}'.");
 
             return vendor.value[0].VendorNum;
+        }
+
+        private static dynamic getInvoiceByID(string service, InvoiceLine invoiceLine) {
+            dynamic postData;
+            // Look up the invoice with our newly created lines
+            postData = new {
+                vendorNum  = getVendorNumByID(invoiceLine.VendorID),
+                invoiceNum = invoiceLine.InvoiceNum
+            };
+
+            postData = EpicorRest.DynamicPost(service, "GetByID", postData);
+            return postData;
+        }
+
+        private static bool invoiceHeadExists(string service, InvoiceLine exampleLine, string groupId) {
+            Logger.Info($"Looking up invoice '{exampleLine.InvoiceNum}'.");
+            // Example call
+            // https://epdev/epicor10/api/v1/Erp.BO.APInvoiceSvc/APInvoices?%24select=InvoiceNum%2C%20GroupID&%24filter=InvoiceNum%20eq%20'PBURNS-1-6'%20and%20GroupID%20eq%20'AM11216'
+            var parameters = new Dictionary<string,string>() {
+                {"$select","InvoiceNum,GroupID" },
+                {"$filter", $"InvoiceNum eq '{exampleLine.InvoiceNum}' and GroupID eq '{groupId}'"}
+            };
+
+            var invoices = EpicorRest.DynamicGet(service, "APInvoices", parameters);
+            var invoiceExists = invoices.value.Count > 0;
+            Logger.Info($"Invoice exists: {invoiceExists}.");
+            return invoiceExists;
         }
         #endregion
     }

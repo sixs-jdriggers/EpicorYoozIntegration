@@ -45,7 +45,7 @@
       <Value Profile="(Default)">/OrganisationalUnits/01/import/VENDORS</Value>
     </Setting>
     <Setting Name="sFTP_Path_POs" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">/OrganisationalUnits/01/import/ORDER</Value>
+      <Value Profile="(Default)">/OrganisationalUnits/01/import/PURCHASE_ORDER</Value>
     </Setting>
     <Setting Name="FileName_ChartOfAccounts" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ChartOfAccounts.csv</Value>
