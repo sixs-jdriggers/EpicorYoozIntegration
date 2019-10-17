@@ -43,8 +43,8 @@ namespace EpicorToYooz.Exports {
                                      OrderCreator         = row[BAQColumns.UserFile_Name.ToString()].ToString(),
                                      OrderApprover        = row[BAQColumns.PurAgent_BuyerID.ToString()].ToString(),
                                      Status               = row[BAQColumns.Calculated_Status.ToString()].ToString(),
-                                     ItemNumber           = row[BAQColumns.PODetail_PartNum.ToString()].ToString(),
-                                     ItemCode             = row[BAQColumns.Calculated_ItemCode.ToString()].ToString(),
+                                     ItemNumber           = row[BAQColumns.Calculated_ItemCode.ToString()].ToString(), // The names are mismatched, but this is correct.
+                                     ItemCode             = row[BAQColumns.PODetail_PartNum.ToString()].ToString(),
                                      ItemDescription      = row[BAQColumns.PODetail_LineDesc.ToString()].ToString(),
                                      ItemUnitPrice        = row[BAQColumns.PODetail_UnitCost.ToString()].ToString(),
                                      QuantityOrdered      = row[BAQColumns.PODetail_OrderQty.ToString()].ToString(),

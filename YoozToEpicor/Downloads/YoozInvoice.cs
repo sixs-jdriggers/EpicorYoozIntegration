@@ -43,6 +43,7 @@ namespace YoozToEpicor.Downloads {
         public string    ProductLabel  { get; set; }
         public decimal?  InvoiceQty    { get; set; }
         public decimal?  UnitPrice     { get; set; }
+        public int?      POLine        { get; set; }
     }
 
     // Map CSV headers to class properties.
@@ -65,6 +66,7 @@ namespace YoozToEpicor.Downloads {
             Map(m => m.ProductLabel).Name("Product label");
             Map(m => m.InvoiceQty).Name("Invoiced quantity");
             Map(m => m.UnitPrice).Name("Unit price");
+            Map(m => m.POLine).Name("PO line#");
         }
     }
 }

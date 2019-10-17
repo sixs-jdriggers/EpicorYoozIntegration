@@ -106,7 +106,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/export/done")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/export")]
         public string sFTP_Path {
             get {
                 return ((string)(this["sFTP_Path"]));
@@ -124,7 +124,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool DeleteFTPFilesAfterDownload {
             get {
                 return ((bool)(this["DeleteFTPFilesAfterDownload"]));
@@ -133,7 +133,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DeleteTempFilesAfterProcessing {
             get {
                 return ((bool)(this["DeleteTempFilesAfterProcessing"]));
