@@ -25,7 +25,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("EPDev")]
+        [global::System.Configuration.DefaultSettingValueAttribute("QADev")]
         public string Epicor_Server {
             get {
                 return ((string)(this["Epicor_Server"]));

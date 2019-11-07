@@ -22,7 +22,8 @@ namespace YoozToEpicor {
                 Logger.Info("Downloading Yooz files.");
                 downloadFiles();
             } else {
-                Logger.Info("Skipping download of Yooz files. (Configured option.)");}
+                Logger.Info("Skipping download of Yooz files. (Configured option.)");
+            }
 
             var filesToProcess = Directory.GetFiles(Settings.Default.TempDirectory);
             Logger.Info($"Processing {filesToProcess.Length} files.");
@@ -30,21 +31,18 @@ namespace YoozToEpicor {
             // Process invoices
             var invoiceGroup = $"Y_{DateTime.Today.ToString("MMddyy")}";
             Epicor.CreateInvoiceGroup(invoiceGroup);
-            foreach (var file in filesToProcess)
+            foreach (var file in filesToProcess) {
                 processFile(file, invoiceGroup);
 
-            // Archive/Delete processed files
-            if (Settings.Default.DeleteTempFilesAfterProcessing)
-                deleteFiles();
+                // Archive/Delete processed files
+                if (Settings.Default.DeleteTempFilesAfterProcessing)
+                    deleteFile(file);
+            }
         }
 
-        private static void deleteFiles() {
-            Logger.Info($"Deleting processed files from: {Settings.Default.TempDirectory}");
-            var files = Directory.GetFiles(Settings.Default.TempDirectory);
-            foreach (var file in files) {
-                Logger.Trace($"Deleting: {file}");
-                File.Delete(file);
-            }
+        private static void deleteFile(string file) {
+            Logger.Info($"Deleting processed file: {file}");
+            File.Delete(file);
         }
 
         private static void processFile(string file, string groupID) {

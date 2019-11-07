@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Epicor_Server" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">EPDev</Value>
+      <Value Profile="(Default)">QADev</Value>
     </Setting>
     <Setting Name="Epicor_Instance" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Epicor10</Value>

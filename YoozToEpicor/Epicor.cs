@@ -202,8 +202,12 @@ namespace YoozToEpicor {
             if (invoiceLine.UnitPrice.HasValue)
                 invoiceDS = changeUnitCost(service, invoiceDS, invoiceLine);
 
-            // Save the final invoice
-            update(invoiceDS, service);
+            // Save the invoice
+            invoiceDS = update(invoiceDS, service);
+            // Set the GL Account
+            invoiceDS = setGLAccount(service, invoiceLine, invoiceDS);
+            // Save the changes 
+            invoiceDS = update(invoiceDS, service);
         }
 
         private static dynamic getReceiptLines(string service, InvoiceLine invoiceLine) {
@@ -351,12 +355,15 @@ namespace YoozToEpicor {
             invoiceDS = createMiscLine(service, invoiceDS, invoiceLine);
             invoiceDS = changePartNum_Misc(service, invoiceDS, invoiceLine);
             invoiceDS = changeExtCost(service, invoiceLine, invoiceDS);
-
-            // Save the final invoice
-            update(invoiceDS, service);
+            // Save the invoice
+            invoiceDS = update(invoiceDS, service);
+            // Set the GL Account
+            invoiceDS = setGLAccount(service, invoiceLine, invoiceDS);
+            // Save the changes 
+            invoiceDS = update(invoiceDS, service);
         }
 
-        private static object createMiscLine(string service, dynamic invoiceDS, InvoiceLine invoiceLine) {
+        private static dynamic createMiscLine(string service, dynamic invoiceDS, InvoiceLine invoiceLine) {
             // Get new non-POLine
             invoiceDS = new {
                 ds          = invoiceDS,
@@ -405,6 +412,21 @@ namespace YoozToEpicor {
             };
 
             return EpicorRest.DynamicPost(service, "ChangeExtCost", postData).parameters.ds;
+        }
+
+        private static dynamic setGLAccount(string service, InvoiceLine invoiceLine, dynamic invoiceDS) {
+            // Find the APInvDtlExpTGLC record. 
+            // This is the GL info for the invoice line
+            var TGLCCount = invoiceDS.APInvExpTGLC.Count;
+
+            invoiceDS.APInvExpTGLC[TGLCCount-1].GLAccount = $"{invoiceLine.GLAccount}|{invoiceLine.Entity}|{invoiceLine.CostCenter}";
+            invoiceDS.APInvExpTGLC[TGLCCount-1].SegValue1 = invoiceLine.GLAccount;
+            invoiceDS.APInvExpTGLC[TGLCCount-1].SegValue2 = invoiceLine.Entity;
+            invoiceDS.APInvExpTGLC[TGLCCount-1].SegValue3 = invoiceLine.CostCenter;
+            invoiceDS.APInvExpTGLC[TGLCCount-1].RowMod    = "U";
+
+            // Set the account
+            return invoiceDS;
         }
         #endregion
 
