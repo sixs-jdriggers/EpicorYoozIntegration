@@ -31,13 +31,8 @@ namespace YoozToEpicor {
             // Process invoices
             var invoiceGroup = $"Y_{DateTime.Today.ToString("MMddyy")}";
             Epicor.CreateInvoiceGroup(invoiceGroup);
-            foreach (var file in filesToProcess) {
+            foreach (var file in filesToProcess)
                 processFile(file, invoiceGroup);
-
-                // Archive/Delete processed files
-                if (Settings.Default.DeleteTempFilesAfterProcessing)
-                    deleteFile(file);
-            }
         }
 
         private static void deleteFile(string file) {
@@ -62,6 +57,10 @@ namespace YoozToEpicor {
                     } catch (Exception ex) {
                         Logger.Error($"Failed to process invoice '{invoiceNum}'. Error: {ex.Message}");
                     }
+
+                // Archive/Delete processed file
+                if (Settings.Default.DeleteTempFilesAfterProcessing)
+                    deleteFile(file);
             } catch (Exception ex) {
                 Logger.Error($"Failed to process {file}. Error: {ex.Message}");
             }
