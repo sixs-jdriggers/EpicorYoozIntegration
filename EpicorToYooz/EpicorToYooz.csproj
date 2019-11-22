@@ -98,6 +98,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exports\Payments.cs" />
     <Compile Include="Exports\ChartOfAccounts.cs" />
     <Compile Include="Exports\POs.cs" />
     <Compile Include="Exports\Vendors.cs" />
@@ -109,7 +110,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="YoozUploader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

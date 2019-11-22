@@ -54,13 +54,13 @@ namespace YoozToEpicor {
                     try {
                         var invoice = new YoozInvoice(invoiceData.InvoiceLines.Where(i => i.InvoiceNum==invoiceNum).ToList());
                         Epicor.ImportInvoice(invoice, groupID);
+
+                        // Archive/Delete processed file
+                        if (Settings.Default.DeleteTempFilesAfterProcessing)
+                            deleteFile(file);
                     } catch (Exception ex) {
                         Logger.Error($"Failed to process invoice '{invoiceNum}'. Error: {ex.Message}");
                     }
-
-                // Archive/Delete processed file
-                if (Settings.Default.DeleteTempFilesAfterProcessing)
-                    deleteFile(file);
             } catch (Exception ex) {
                 Logger.Error($"Failed to process {file}. Error: {ex.Message}");
             }

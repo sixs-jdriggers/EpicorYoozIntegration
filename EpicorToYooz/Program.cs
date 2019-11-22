@@ -24,6 +24,7 @@ namespace EpicorToYooz {
                 ChartOfAccounts.Export();
                 Vendors.Export();
                 POs.Export();
+                Payments.Export();
 
                 Logger.Info("Data exported.");
 
@@ -52,7 +53,8 @@ namespace EpicorToYooz {
             var files = new Dictionary<string, string> {
                 {Settings.Default.FileName_ChartOfAccounts, Settings.Default.sFTP_Path_ChartOfAccount},
                 {Settings.Default.FileName_Vendors, Settings.Default.sFTP_Path_Vendors},
-                {Settings.Default.FileName_POs, Settings.Default.sFTP_Path_POs}
+                {Settings.Default.FileName_POs, Settings.Default.sFTP_Path_POs},
+                {Settings.Default.FileName_Payments, Settings.Default.sFTP_Path_Payments }
             };
 
             foreach (var file in files)

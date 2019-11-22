@@ -118,6 +118,7 @@ namespace YoozToEpicor {
 
             // Set other fields
             invoiceDS.APInvHed[0].InvoiceNum = exampleLine.InvoiceNum;
+            invoiceDS.APInvHed[0].DocumentID_c = exampleLine.DocumentID;
 
             // Make sure we don't override default dates with null values.
             if (exampleLine.InvoiceDate.HasValue)
@@ -125,7 +126,7 @@ namespace YoozToEpicor {
 
             if (exampleLine.DueDate.HasValue)
                 invoiceDS.APInvHed[0].DueDate = exampleLine.DueDate.Value;
-
+            
             // Save the final invoice
             invoiceDS = update(invoiceDS, service);
             return invoiceDS;

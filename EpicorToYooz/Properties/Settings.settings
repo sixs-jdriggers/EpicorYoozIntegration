@@ -33,16 +33,16 @@
       <Value Profile="(Default)">2222</Value>
     </Setting>
     <Setting Name="sFTP_User" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">cartieda@374</Value>
+      <Value Profile="(Default)">ftpuser@374</Value>
     </Setting>
     <Setting Name="sFTP_Pass" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Yooz@2015</Value>
+      <Value Profile="(Default)">Euclid19</Value>
     </Setting>
     <Setting Name="sFTP_Path_ChartOfAccount" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">/OrganisationalUnits/01/import/ACCOUNTS</Value>
+      <Value Profile="(Default)">/OrganisationalUnits/01/import/MASTER_DATA</Value>
     </Setting>
     <Setting Name="sFTP_Path_Vendors" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">/OrganisationalUnits/01/import/VENDORS</Value>
+      <Value Profile="(Default)">/OrganisationalUnits/01/import/MASTER_DATA</Value>
     </Setting>
     <Setting Name="sFTP_Path_POs" Type="System.String" Scope="Application">
       <Value Profile="(Default)">/OrganisationalUnits/01/import/PURCHASE_ORDER</Value>
@@ -78,10 +78,25 @@
       <Value Profile="(Default)">ESC</Value>
     </Setting>
     <Setting Name="LastExecution" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">2019-10-13</Value>
+      <Value Profile="(Default)">2018-09-01</Value>
     </Setting>
     <Setting Name="SkipFTPUpload" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BAQ_Payments" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">YOOZ_Payments</Value>
+    </Setting>
+    <Setting Name="FileName_Payments" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Payments.xml</Value>
+    </Setting>
+    <Setting Name="Export_Payments_Version" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Export_Payments_Header" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="sFTP_Path_Payments" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/OrganisationalUnits/01/import/FEEDBACK</Value>
     </Setting>
   </Settings>
 </SettingsFile>

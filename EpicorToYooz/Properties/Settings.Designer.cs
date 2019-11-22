@@ -12,7 +12,7 @@ namespace EpicorToYooz.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -115,7 +115,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("cartieda@374")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ftpuser@374")]
         public string sFTP_User {
             get {
                 return ((string)(this["sFTP_User"]));
@@ -124,7 +124,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Yooz@2015")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Euclid19")]
         public string sFTP_Pass {
             get {
                 return ((string)(this["sFTP_Pass"]));
@@ -133,7 +133,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/ACCOUNTS")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/MASTER_DATA")]
         public string sFTP_Path_ChartOfAccount {
             get {
                 return ((string)(this["sFTP_Path_ChartOfAccount"]));
@@ -142,7 +142,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/VENDORS")]
+        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/MASTER_DATA")]
         public string sFTP_Path_Vendors {
             get {
                 return ((string)(this["sFTP_Path_Vendors"]));
@@ -250,7 +250,7 @@ namespace EpicorToYooz.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2019-10-13")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2018-09-01")]
         public global::System.DateTime LastExecution {
             get {
                 return ((global::System.DateTime)(this["LastExecution"]));
@@ -266,6 +266,51 @@ namespace EpicorToYooz.Properties {
         public bool SkipFTPUpload {
             get {
                 return ((bool)(this["SkipFTPUpload"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("YOOZ_Payments")]
+        public string BAQ_Payments {
+            get {
+                return ((string)(this["BAQ_Payments"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Payments.xml")]
+        public string FileName_Payments {
+            get {
+                return ((string)(this["FileName_Payments"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Export_Payments_Version {
+            get {
+                return ((string)(this["Export_Payments_Version"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Export_Payments_Header {
+            get {
+                return ((string)(this["Export_Payments_Header"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("/OrganisationalUnits/01/import/FEEDBACK")]
+        public string sFTP_Path_Payments {
+            get {
+                return ((string)(this["sFTP_Path_Payments"]));
             }
         }
     }
