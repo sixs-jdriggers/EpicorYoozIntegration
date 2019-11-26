@@ -70,7 +70,8 @@ namespace EpicorToYooz {
             var localPath     = Path.Combine(Settings.Default.TempDirectory, fileName);
             
             // Upload file as File-23423434.csv to avoid name conflicts
-            var remoteFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-{DateTime.Now.Ticks}.csv";
+            var extension = Path.GetExtension(fileName);
+            var remoteFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-{DateTime.Now.Ticks}.{extension}";
 
             Logger.Info($"Uploading {fileName} to ftp path: {remotePath}");
             var connectionInfo = new ConnectionInfo(Settings.Default.sFTP_URL,
