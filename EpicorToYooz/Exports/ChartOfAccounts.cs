@@ -35,7 +35,7 @@ namespace EpicorToYooz.Exports {
                                    .Select(row => new Account {
                                        AccountNumber = row[BAQColumns.Calculated_Account.ToString()].ToString(),
                                        Description =
-                                           row[BAQColumns.GLAccount_AccountDesc.ToString()].ToString(),
+                                           row[BAQColumns.Calculated_Description.ToString()].ToString(),
                                        Classification =
                                            row[BAQColumns.Calculated_Classification.ToString()].ToString(),
                                        Action = row[BAQColumns.Calculated_Action.ToString()].ToString()
@@ -89,7 +89,7 @@ namespace EpicorToYooz.Exports {
 
         private enum BAQColumns {
             Calculated_Account,
-            GLAccount_AccountDesc,
+            Calculated_Description,
             Calculated_Classification,
             Calculated_Action
         }
