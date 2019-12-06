@@ -64,6 +64,12 @@ namespace EpicorToYooz.Exports {
                                  })
                                  .ToList();
 
+                if (orders.Count==0) {
+                    Logger.Info("No POs found. Skipping file generation.");
+                    return;
+                }
+
+
                 Logger.Debug("Converting BAQ results to classes for export...");
                 Logger.Info("Writing Purchase Order CSV file...");
                 using (var writer = new StreamWriter($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_POs}"))

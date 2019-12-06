@@ -47,6 +47,11 @@ namespace EpicorToYooz.Exports {
                                   })
                                   .ToList();
 
+                if (vendors.Count==0) {
+                    Logger.Info("No vendors found. Skipping file generation.");
+                    return;
+                }
+
                 Logger.Info("Writing Vendors to CSV file...");
                 using (var writer = new StreamWriter($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_Vendors}"))
                 using (var csv = new CsvWriter(writer)) {

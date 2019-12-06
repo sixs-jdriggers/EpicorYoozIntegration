@@ -42,6 +42,11 @@ namespace EpicorToYooz.Exports {
                                    })
                                    .ToList();
 
+                if (accounts.Count==0) {
+                    Logger.Info("No accounts found. Skipping file generation.");
+                    return;
+                }
+
                 Logger.Info("Writing Chart Of Accounts CSV file...");
                 using (var writer = new StreamWriter($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_ChartOfAccounts}"))
                 using (var csv = new CsvWriter(writer)) {

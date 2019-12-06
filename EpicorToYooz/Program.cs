@@ -57,8 +57,15 @@ namespace EpicorToYooz {
                 {Settings.Default.FileName_Payments, Settings.Default.sFTP_Path_Payments }
             };
 
-            foreach (var file in files)
-                UploadFile(file.Key,file.Value);
+            foreach (var file in files) {
+                // Where is the file? Make sure it exists before uploading
+                var fileName = file.Key;
+                var localPath = Path.Combine(Settings.Default.TempDirectory, fileName);
+                if (File.Exists(localPath))
+                    UploadFile(fileName, file.Value);
+                else
+                    Logger.Info($"File '{localPath}' is not present. Upload skipped. (This is normal when there are no pending uploads.");
+            }
         }
 
         /// <summary>

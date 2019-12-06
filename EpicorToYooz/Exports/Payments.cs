@@ -41,6 +41,11 @@ namespace EpicorToYooz.Exports {
                                    })
                                    .ToList();
 
+                if (payments.Count==0) {
+                    Logger.Info("No payments found. Skipping file generation.");
+                    return;
+                }
+
                 Logger.Info("Writing Payments XML file...");
                 using (var writer = XmlWriter.Create($"{Settings.Default.TempDirectory}\\{Settings.Default.FileName_Payments}")) {
                     writer.WriteStartDocument();
