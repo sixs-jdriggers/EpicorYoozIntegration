@@ -76,7 +76,7 @@ namespace EpicorToYooz.Exports {
                         // Amount
                         writer.WriteStartElement("field");
                         writer.WriteAttributeString("name",  "PAYMENT_AMOUNT");
-                        writer.WriteAttributeString("value", payment.Amount);
+                        writer.WriteAttributeString("value", decimal.Parse(payment.Amount).ToString("F2"));
                         writer.WriteEndElement();
 
                         // End Document
