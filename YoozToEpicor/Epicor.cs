@@ -41,6 +41,17 @@ namespace YoozToEpicor {
             EpicorRest.DynamicPost(service, method, group);
         }
 
+        public static void UnlockInvoiceGroup(string invoiceGroup) {
+            // Setup the REST api and select our BO.
+            SetupREST();
+            const string service = "Erp.BO.APInvGrpSvc";
+
+            var postData = new {InGroupID = invoiceGroup};
+            EpicorRest.DynamicPost(service, "UnlockGroup", postData);
+            
+            Logger.Info($"Unlocked group: {invoiceGroup}");
+        }
+
         /// <summary>
         ///     Create/update an AP invoice from Yooz data
         /// </summary>

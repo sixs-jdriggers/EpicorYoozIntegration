@@ -33,6 +33,9 @@ namespace YoozToEpicor {
             Epicor.CreateInvoiceGroup(invoiceGroup);
             foreach (var file in filesToProcess)
                 processFile(file, invoiceGroup);
+            
+            // Make sure we leave the group unlocked
+            Epicor.UnlockInvoiceGroup(invoiceGroup);
         }
 
         private static void deleteFile(string file) {
