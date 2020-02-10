@@ -44,5 +44,8 @@
     <Setting Name="DevOption_SkipDownloadingNewFiles" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="ArchiveDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c:\scratch\Archive\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

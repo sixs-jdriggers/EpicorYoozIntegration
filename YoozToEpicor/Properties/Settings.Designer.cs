@@ -148,5 +148,14 @@ namespace YoozToEpicor.Properties {
                 return ((bool)(this["DevOption_SkipDownloadingNewFiles"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\scratch\\Archive\\")]
+        public string ArchiveDirectory {
+            get {
+                return ((string)(this["ArchiveDirectory"]));
+            }
+        }
     }
 }

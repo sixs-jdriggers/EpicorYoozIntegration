@@ -38,11 +38,6 @@ namespace YoozToEpicor {
             Epicor.UnlockInvoiceGroup(invoiceGroup);
         }
 
-        private static void deleteFile(string file) {
-            Logger.Info($"Deleting processed file: {file}");
-            File.Delete(file);
-        }
-
         private static void processFile(string file, string groupID) {
             try {
                 Logger.Info($"Parsing file: {file}");
@@ -62,11 +57,27 @@ namespace YoozToEpicor {
                         if (Settings.Default.DeleteTempFilesAfterProcessing)
                             deleteFile(file);
                     } catch (Exception ex) {
+                        // Log our error and archive the failed file for review.
                         Logger.Error($"Failed to process invoice '{invoiceNum}'. Error: {ex.Message}");
+                        archiveFile(file);
                     }
             } catch (Exception ex) {
                 Logger.Error($"Failed to process {file}. Error: {ex.Message}");
             }
+        }
+
+        private static void archiveFile(string file) {
+            Logger.Info($"Archiving failed file: {file}");
+
+            // Get file name without path and combine with archive directory to get destination for archived file.
+            var destFileName = Path.Combine(Settings.Default.ArchiveDirectory, Path.GetFileName(file));
+
+            File.Move(file,destFileName);
+        }
+
+        private static void deleteFile(string file) {
+            Logger.Info($"Deleting processed file: {file}");
+            File.Delete(file);
         }
 
         /// <summary>
