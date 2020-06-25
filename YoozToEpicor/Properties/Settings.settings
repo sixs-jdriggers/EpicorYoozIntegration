@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="Epicor_Server" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">QADev</Value>
+      <Value Profile="(Default)">US-SVR-ERPAPP1</Value>
     </Setting>
     <Setting Name="Epicor_Instance" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Epicor10</Value>
+      <Value Profile="(Default)">ERP102500</Value>
     </Setting>
     <Setting Name="Epicor_User" Type="System.String" Scope="Application">
       <Value Profile="(Default)">trigem</Value>
     </Setting>
     <Setting Name="Epicor_Pass" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">sixspartners</Value>
+      <Value Profile="(Default)">Trigem09</Value>
     </Setting>
     <Setting Name="TempDirectory" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c:\scratch\Downloads</Value>
@@ -36,16 +36,19 @@
       <Value Profile="(Default)">ESC</Value>
     </Setting>
     <Setting Name="DeleteFTPFilesAfterDownload" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DeleteTempFilesAfterProcessing" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DevOption_SkipDownloadingNewFiles" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ArchiveDirectory" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c:\scratch\Archive\</Value>
+    </Setting>
+    <Setting Name="DefaultTermsCode" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">NET</Value>
     </Setting>
   </Settings>
 </SettingsFile>

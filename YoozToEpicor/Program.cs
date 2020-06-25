@@ -11,31 +11,37 @@ namespace YoozToEpicor {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static void Main(string[] args) {
-            Logger.Info($"Temp Directory: {Settings.Default.TempDirectory}");
+            try {
+                Logger.Info($"Temp Directory: {Settings.Default.TempDirectory}");
 
-            /*
-             * We have a config option to skip downloading new files. This
-             * makes it easier to test with arbitrary files if Yooz doesn't have good test data
-             * available on the sFTP site.
-             */
-            if (!Settings.Default.DevOption_SkipDownloadingNewFiles) {
-                Logger.Info("Downloading Yooz files.");
-                downloadFiles();
-            } else {
-                Logger.Info("Skipping download of Yooz files. (Configured option.)");
+                /*
+                 * We have a config option to skip downloading new files. This
+                 * makes it easier to test with arbitrary files if Yooz doesn't have good test data
+                 * available on the sFTP site.
+                 */
+                if (!Settings.Default.DevOption_SkipDownloadingNewFiles) {
+                    Logger.Info("Downloading Yooz files.");
+                    downloadFiles();
+                } else {
+                    Logger.Info("Skipping download of Yooz files. (Configured option.)");
+                }
+
+                var filesToProcess = Directory.GetFiles(Settings.Default.TempDirectory);
+                Logger.Info($"Processing {filesToProcess.Length} files.");
+
+                // Process invoices
+                var invoiceGroup = $"Y_{DateTime.Today.ToString("MMddyy")}";
+                Epicor.CreateInvoiceGroup(invoiceGroup);
+                foreach (var file in filesToProcess)
+                    processFile(file, invoiceGroup);
+
+                // Make sure we leave the group unlocked
+                Epicor.UnlockInvoiceGroup(invoiceGroup);
+            } catch (Exception ex) {
+                Logger.Error($"Error: {ex.Message}");
+            } finally {
+                Logger.Info("Finished.");
             }
-
-            var filesToProcess = Directory.GetFiles(Settings.Default.TempDirectory);
-            Logger.Info($"Processing {filesToProcess.Length} files.");
-
-            // Process invoices
-            var invoiceGroup = $"Y_{DateTime.Today.ToString("MMddyy")}";
-            Epicor.CreateInvoiceGroup(invoiceGroup);
-            foreach (var file in filesToProcess)
-                processFile(file, invoiceGroup);
-            
-            // Make sure we leave the group unlocked
-            Epicor.UnlockInvoiceGroup(invoiceGroup);
         }
 
         private static void processFile(string file, string groupID) {
@@ -52,15 +58,15 @@ namespace YoozToEpicor {
                     try {
                         var invoice = new YoozInvoice(invoiceData.InvoiceLines.Where(i => i.InvoiceNum==invoiceNum).ToList());
                         Epicor.ImportInvoice(invoice, groupID);
-
-                        // Archive/Delete processed file
-                        if (Settings.Default.DeleteTempFilesAfterProcessing)
-                            deleteFile(file);
                     } catch (Exception ex) {
                         // Log our error and archive the failed file for review.
                         Logger.Error($"Failed to process invoice '{invoiceNum}'. Error: {ex.Message}");
                         archiveFile(file);
                     }
+
+                // Archive/Delete processed file
+                if (Settings.Default.DeleteTempFilesAfterProcessing)
+                    deleteFile(file);
             } catch (Exception ex) {
                 Logger.Error($"Failed to process {file}. Error: {ex.Message}");
             }
@@ -71,13 +77,14 @@ namespace YoozToEpicor {
 
             // Get file name without path and combine with archive directory to get destination for archived file.
             var destFileName = Path.Combine(Settings.Default.ArchiveDirectory, Path.GetFileName(file));
-
-            File.Move(file,destFileName);
+            if (File.Exists(file))
+                File.Move(file, destFileName);
         }
 
         private static void deleteFile(string file) {
             Logger.Info($"Deleting processed file: {file}");
-            File.Delete(file);
+            if (File.Exists(file))
+                File.Delete(file);
         }
 
         /// <summary>

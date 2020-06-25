@@ -48,7 +48,7 @@ namespace YoozToEpicor {
 
             var postData = new {InGroupID = invoiceGroup};
             EpicorRest.DynamicPost(service, "UnlockGroup", postData);
-            
+
             Logger.Info($"Unlocked group: {invoiceGroup}");
         }
 
@@ -128,7 +128,7 @@ namespace YoozToEpicor {
             invoiceDS = changeInvoiceVendorAmt(invoiceDS, exampleLine, service);
 
             // Set other fields
-            invoiceDS.APInvHed[0].InvoiceNum = exampleLine.InvoiceNum;
+            invoiceDS.APInvHed[0].InvoiceNum   = exampleLine.InvoiceNum;
             invoiceDS.APInvHed[0].DocumentID_c = exampleLine.DocumentID;
 
             // Make sure we don't override default dates with null values.
@@ -137,7 +137,12 @@ namespace YoozToEpicor {
 
             if (exampleLine.DueDate.HasValue)
                 invoiceDS.APInvHed[0].DueDate = exampleLine.DueDate.Value;
-            
+
+            // Default in a terms code if one isn't present.
+            // Normally this populated with the Vendor's value, but some vendors may not have terms configured.
+            if (string.IsNullOrWhiteSpace(invoiceDS.APInvHed[0].TermsCode.ToString()))
+                invoiceDS.APInvHed[0].TermsCode = Settings.Default.DefaultTermsCode;
+
             // Save the final invoice
             invoiceDS = update(invoiceDS, service);
             return invoiceDS;
@@ -147,6 +152,7 @@ namespace YoozToEpicor {
             // Set vendor
             var postData = new {
                 ds               = invoiceDS,
+                confirmCheck     = false,
                 ProposedVendorID = exampleLine.VendorID
             };
 
@@ -154,14 +160,20 @@ namespace YoozToEpicor {
         }
 
         private static dynamic changeRefPONum(dynamic invoiceDS, string service, int poNum) {
-            // Set PO Number
-            invoiceDS.APInvHed[0].REFPONum = poNum;
-            var changePOData = new {
-                ProposedRefPONum = poNum,
-                ds               = invoiceDS
-            };
+            try {
+                // Set PO Number
+                invoiceDS.APInvHed[0].REFPONum = poNum;
+                var changePOData = new {
+                    ProposedRefPONum = poNum,
+                    confirmCheck     = false,
+                    ds               = invoiceDS
+                };
 
-            return EpicorRest.DynamicPost(service, "ChangeRefPONum", changePOData).parameters.ds;
+                return EpicorRest.DynamicPost(service, "ChangeRefPONum", changePOData).parameters.ds;
+            } catch (Exception ex) {
+                Logger.Error($"Failed setting PO ({poNum}) on invoice. Error: {ex.Message}");
+                throw;
+            }
         }
 
         private static dynamic changeInvoiceDateEx(dynamic invoiceDS, InvoiceLine exampleLine, string service) {
@@ -402,7 +414,11 @@ namespace YoozToEpicor {
 
             // If we don't have the part, use the description
             var partNum = !string.IsNullOrWhiteSpace(invoiceLine.ProductCode) ? invoiceLine.ProductCode : description;
-            invoiceDS.APInvDtl[lines-1].PartNum     = partNum;
+            // Partnum is limited to 50 chars.
+            if (partNum.Length > 50)
+                partNum = partNum.Substring(0, 50);
+
+            invoiceDS.APInvDtl[lines-1].PartNum = partNum;
             invoiceDS.APInvDtl[lines-1].Description = description;
 
             invoiceDS = new {
@@ -489,6 +505,18 @@ namespace YoozToEpicor {
             };
 
             var invoices      = EpicorRest.DynamicGet(service, "APInvoices", parameters);
+            var invoiceExists = invoices.value.Count > 0;
+            Logger.Info($"Invoice exists: {invoiceExists}.");
+            return invoiceExists;
+        }
+
+        private static bool poExists(string poNum) {
+            Logger.Info($"Looking up PO '{poNum}'.");
+            // Example call
+            // https://epdev/epicor10/api/v1/Erp.BO.APInvoiceSvc/APInvoices?%24select=InvoiceNum%2C%20GroupID&%24filter=InvoiceNum%20eq%20'PBURNS-1-6'%20and%20GroupID%20eq%20'AM11216'
+            var parameters = new Dictionary<string, string>();
+
+            var invoices      = EpicorRest.DynamicGet("Erp:BO:POSvc", "POes", parameters);
             var invoiceExists = invoices.value.Count > 0;
             Logger.Info($"Invoice exists: {invoiceExists}.");
             return invoiceExists;

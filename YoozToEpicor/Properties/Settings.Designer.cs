@@ -12,7 +12,7 @@ namespace YoozToEpicor.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("QADev")]
+        [global::System.Configuration.DefaultSettingValueAttribute("US-SVR-ERPAPP1")]
         public string Epicor_Server {
             get {
                 return ((string)(this["Epicor_Server"]));
@@ -34,7 +34,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Epicor10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ERP102500")]
         public string Epicor_Instance {
             get {
                 return ((string)(this["Epicor_Instance"]));
@@ -52,7 +52,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("sixspartners")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Trigem09")]
         public string Epicor_Pass {
             get {
                 return ((string)(this["Epicor_Pass"]));
@@ -124,7 +124,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DeleteFTPFilesAfterDownload {
             get {
                 return ((bool)(this["DeleteFTPFilesAfterDownload"]));
@@ -133,7 +133,7 @@ namespace YoozToEpicor.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DeleteTempFilesAfterProcessing {
             get {
                 return ((bool)(this["DeleteTempFilesAfterProcessing"]));
@@ -155,6 +155,15 @@ namespace YoozToEpicor.Properties {
         public string ArchiveDirectory {
             get {
                 return ((string)(this["ArchiveDirectory"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NET")]
+        public string DefaultTermsCode {
+            get {
+                return ((string)(this["DefaultTermsCode"]));
             }
         }
     }
